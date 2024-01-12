@@ -4,10 +4,12 @@
 package trashsort;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+//import org.junit.platform.engine.support.discovery.SelectorResolver.Match;
+import static trashsort.TrashSort.*;
+//import static org.junit.jupiter.api.Assertions.*;
 
-class AppTest {
-    @Test void appHasAGreeting() {
-    
+class TrashTest {
+    @Test void Difficulty() {
+        assert(matchDifficultyText("normal") == 1);
     }
 }
