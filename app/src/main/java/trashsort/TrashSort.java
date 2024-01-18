@@ -30,9 +30,11 @@ public class TrashSort {
     public static void main(String[] args) throws InputMismatchException {
         Scanner scanner = new Scanner(System.in);
 
-        int rounds = 5; // change later
+        int rounds;
         Item[] itemDatabase = ItemDb.ItemDBCreator(); // fetches the Item database from another file's function
         int bonusPoints = 0;
+        int correctAnswers = 0;
+        int TotalQuestions = 0;
 
         System.out.println("Welcome to Trash Sorting Simulator!");
         System.out.println("Please choose your difficulty: normal, hard, extreme (either type in word or number)");
@@ -40,9 +42,24 @@ public class TrashSort {
         String difficulty = scanner.nextLine();
         int sanitizedDifficulty = matchDifficultyText(difficulty.toLowerCase().strip());
 
+        switch (sanitizedDifficulty) {
+            case 1:
+                rounds = 10;
+                break;
+            case 2:
+                rounds = 20;
+                break;
+            case 3:
+                rounds = 30;
+                break;
+            default:
+                rounds = 10;
+        }
+
         long start = System.nanoTime();
 
         for (int i = 0; i < rounds; i++) {
+            TotalQuestions++;
             System.out.println("Round " + i + " of " + rounds);
             System.out.println("Item: " + itemDatabase[i].name);
             System.out.println("To which container does this item belong to?");
@@ -52,9 +69,10 @@ public class TrashSort {
             String correctAnswer = itemDatabase[i].classification.toString().toLowerCase();
 
             if (userAnswer.equals(correctAnswer)) {
+                correctAnswers++;
                 System.out.println("Correct!");
                 if (itemDatabase[i].points.isPresent() && itemDatabase[i].points.getAsInt() > 0) {
-                    bonusPoints += itemDatabase[i].points.orElse(0) * 50;
+                    bonusPoints += itemDatabase[i].points.orElse(0);
                 }
             } else if (sanitizedDifficulty == 1 || sanitizedDifficulty == 2) {
                 System.out.println("Incorrect!");
@@ -65,7 +83,7 @@ public class TrashSort {
 
         long end = System.nanoTime();
         long elapsedTime = (end - start) / 1000000000;
-        System.out.println("You have finished the game! Your score is: " + calculatePoints(elapsedTime, sanitizedDifficulty, bonusPoints));
+        System.out.println("You have finished the game and completed " + TotalQuestions + " questions"+ "! Your score is: " + calculatePoints(elapsedTime, sanitizedDifficulty, bonusPoints) + (correctAnswers / TotalQuestions) * 100 + "%");
         System.out.println("Game Over! Elapsed Time: " + elapsedTime + " seconds");
 
         scanner.close();
@@ -97,6 +115,6 @@ public class TrashSort {
     }
 
     public static long calculatePoints(long time, int difficulty, int bonusPoints) {
-        return Math.round(bonusPoints / time) * difficulty;
+        return Math.round((bonusPoints / time) * difficulty) * 10;
     }
 }
