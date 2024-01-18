@@ -5,7 +5,15 @@ import java.util.OptionalInt;
 import java.util.Scanner;
 
 public class TrashSort {
-    
+    public static final String ANSI_PURPLE = "\033[0;35m";  //IMPORT COLORS TO JAZZ IT UP! 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String CYAN = "\033[0;36m";
+
     public class Item {
         public String name;
         public TrashClassification classification;
@@ -27,69 +35,183 @@ public class TrashSort {
         SPECIAL // HAZARDOUS
     }
 
-    public static void main(String[] args) throws InputMismatchException {
+    public static class Player {
+        public String name;
+        public int score;
+
+        public Player(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+    }
+
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        int rounds;
         Item[] itemDatabase = ItemDb.ItemDBCreator(); // fetches the Item database from another file's function
         int bonusPoints = 0;
-        int correctAnswers = 0;
-        int TotalQuestions = 0;
+        int intro_decision = 0;
+        int sanitizedDifficulty;
+        int player_amount;
 
-        System.out.println("Welcome to Trash Sorting Simulator!");
-        System.out.println("Please choose your difficulty: normal, hard, extreme (either type in word or number)");
+        while (!(intro_decision >= 1 && intro_decision <= 3)) {
+            System.out.println(CYAN + "WELCOME TRASH-SORTING-SIMULATOR!" + ANSI_RESET);
 
-        String difficulty = scanner.nextLine();
-        int sanitizedDifficulty = matchDifficultyText(difficulty.toLowerCase().strip());
+            System.out.println
+            ("\nWould you like to: " +
+            "\n1.Play the game" +
+            "\n2.Help" +
+            "\n3.Exit");
 
-        switch (sanitizedDifficulty) {
-            case 1:
-                rounds = 10;
+            System.out.print("Choice: ");
+            intro_decision = Integer.parseInt(scanner.nextLine());
+
+            if (intro_decision == 3) {
                 break;
-            case 2:
-                rounds = 20;
-                break;
-            case 3:
-                rounds = 30;
-                break;
-            default:
-                rounds = 10;
-        }
-
-        long start = System.nanoTime();
-
-        for (int i = 0; i < rounds; i++) {
-            TotalQuestions++;
-            System.out.println("Round " + i + " of " + rounds);
-            System.out.println("Item: " + itemDatabase[i].name);
-            System.out.println("To which container does this item belong to?");
-            System.out.println("\tPlease choose your answer by typing in the word: Recycle, Compost, Landfill, Special");
-
-            String userAnswer = scanner.nextLine().toLowerCase();
-            String correctAnswer = itemDatabase[i].classification.toString().toLowerCase();
-
-            if (userAnswer.equals(correctAnswer)) {
-                correctAnswers++;
-                System.out.println("Correct!");
-                if (itemDatabase[i].points.isPresent() && itemDatabase[i].points.getAsInt() > 0) {
-                    bonusPoints += itemDatabase[i].points.orElse(0);
-                }
-            } else if (sanitizedDifficulty == 1 || sanitizedDifficulty == 2) {
-                System.out.println("Incorrect!");
-            } else {
-                System.out.println("You suck loser! INCORRECT!");
             }
+
+            switch (intro_decision) {
+                case 2: {   // IF they want "help" or clarification on the program:
+                    System.out.println("The purpose of this game is to have you" +
+                    "(the user) \nassort various " +
+                    "COMPOST,RECYCLING, or GARBAGE\nitems into the correct" +
+                    " trash bins." +
+                    "\nFOR EXAMPLE: Plastic Straws would go in the garbage.");
+                }
+            
+                case 1: { // IF they want to play the game
+                        // CREATE ENTIRE GAME MENU GUI IF THEY WANT TO PLAY THE GAME! 
+                        System.out.println(ANSI_GREEN + "\nDESCRIPTION:" + ANSI_RESET);
+                        System.out.println(" A trash-sorting game in which a user receives " +
+                        "random items and their task\n is sorting them in the " +
+                        "correct corresponding trash bins. The more they get correct,\n " +
+                        "the harder it gets. Score 9 correct points and you win!!");
+                        System.out.print(ANSI_GREEN + "\t\t\t\t\tGOODLUCK!\n" + ANSI_RESET);
+                        System.out.println(CYAN + "\n ** NOTE. 1 = Garbage, 2 = Recycling, " +
+                        "3 = Compost **" + ANSI_RESET);
+                        break;
+                    }
+                case 3: System.out.println("Ending program..."); // if they want to end it
+    
+                default: {
+                    System.err.println("Invalid input, please try again!");
+                }
+            }
+
+            do {
+                System.out.println("Please enter the amount of players: ");
+                player_amount = Integer.parseInt(scanner.nextLine());
+            } while (player_amount < 0 || player_amount > 10);
+
+            Player[] player_list = new Player[player_amount];
+
+            for (int i = 0; i < player_amount; i++) {
+                System.out.println("Please enter the name for player " + (i + 1) + ": ");
+                player_list[i] = new Player((scanner.nextLine().strip()), 0);
+            }
+
+            assert player_list.length == player_amount;
+
+            while (true) {
+                System.out.println("\nPlease choose your difficulty level, normal, hard, extreme or adaptive (either type in word or number)");
+                System.out.print("Game Difficulty: ");
+                String difficulty = scanner.nextLine();
+
+                try {
+                    sanitizedDifficulty = matchDifficultyText(difficulty.toLowerCase().strip());
+                    break;
+                } 
+                catch (InputMismatchException e) {
+                    System.out.println("Invalid difficulty! Please try again!");
+                    System.out.print(" You entered: " + difficulty);
+                    System.out.println("Error message: " + e);
+                }
+            }
+
+            long start = System.nanoTime();
+            if (sanitizedDifficulty == 4) {
+                Player[] new_player_list = adaptive(itemDatabase, player_list, bonusPoints);
+                for (int i = 0; i < new_player_list.length; i++) {
+                    System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
+                }
+            }
+
+            else {
+                // classical function
+            }
+            
+            long end = System.nanoTime();
+            long elapsedTime = (end - start) / 1000000000;
+
+            System.out.println("Game Over! Elapsed Time: " + elapsedTime + " seconds");
         }
-
-        long end = System.nanoTime();
-        long elapsedTime = (end - start) / 1000000000;
-        System.out.println("You have finished the game and completed " + TotalQuestions + " questions"+ "! Your score is: " + calculatePoints(elapsedTime, sanitizedDifficulty, bonusPoints) + (correctAnswers / TotalQuestions) * 100 + "%");
-        System.out.println("Game Over! Elapsed Time: " + elapsedTime + " seconds");
-
         scanner.close();
     }
 
-    public static int matchDifficultyText(String difficulty) {
+    public static Player[] adaptive(Item[] itemDatabase, Player[] player_list, int bonusPoints) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Starting Adaptive difficulty round, it will get increasingly hard until you get 3 wrong answers or exhaust the database.");
+        int player_count = player_list.length;
+
+        for (int difficulty = 1; difficulty < 4; difficulty++) {
+            int possible_items = 0;
+            System.out.println("Current Difficulty: " + difficulty);
+
+            for (int j = 0; j < itemDatabase.length; j++) {
+                if (itemDatabase[j].difficulty == difficulty && itemDatabase[j] != null) {
+                    possible_items++;
+                }
+            }
+
+            Item[] available_items = new Item[possible_items];
+
+            int count = 0;
+            for (int j = 0; j < itemDatabase.length; j++) {
+                if (itemDatabase[j].difficulty == difficulty && itemDatabase[j] != null) {
+                    available_items[count] = itemDatabase[j];
+                    count++;
+                }
+            }
+            System.out.println(available_items.length + " items available for this round.");
+            int avail_split = (int) Math.floorDiv(available_items.length, player_count);
+            int round = 0;
+            for (int player = 0; player < player_count; player++) {
+                round = round * player;
+                System.out.println(player_list[player].name + " (" + player + " of " + player_count + "), " + "it is your turn.");
+                for (; round < avail_split; round++)  {
+                    System.out.println(ANSI_PURPLE + "Round " + (round + 1) + " of " + avail_split + "!" + ANSI_RESET);
+                    System.out.println("Item " + round + ": " + available_items[round].name);
+                    System.out.println("To which container does this item belong to?");
+                    System.out.println("\tPlease choose your answer by typing in a word: Recycle, Compost, Landfill, Special\n");
+                    System.out.print("Answer: ");
+
+                    String userAnswer = scanner
+                    .nextLine() // scan next line
+                    .toLowerCase() // convert to lowercase
+                    .strip() // strip leading whitespace
+                    .replaceAll("[^\\p{ASCII}]", ""); // use regex to replace non-ascii characters
+
+                    String correctAnswer = available_items[round].classification.toString().toLowerCase();
+
+                    if (userAnswer.equals(correctAnswer)) {
+                        System.out.println("Correct!");
+                        if (available_items[round].points.isPresent()) {
+                            player_list[player].score += available_items[round].points.getAsInt();
+                        }
+                        player_list[player].score += 1;
+                    }
+
+                    else {
+                        System.out.println("Incorrect!");
+                    }
+                }
+            }
+        }
+        scanner.close();
+        return player_list;
+    }
+
+    public static int matchDifficultyText(String difficulty) throws InputMismatchException {
         if (!difficulty.isEmpty() && !difficulty.matches("\\d")) {
             switch (difficulty) {
                 case "normal":
@@ -98,17 +220,18 @@ public class TrashSort {
                     return 2;
                 case "extreme":
                     return 3;
+                case "adaptive":
+                    return 4;
                 default:
-                    System.out.println("Invalid difficulty! Please try again!");
                     System.out.println("You entered: " + difficulty);
                     throw new InputMismatchException();
             }
         } else {
             int numericDifficulty = Integer.parseInt(difficulty);
-            if (numericDifficulty > 0 && numericDifficulty < 4) {
+            if (numericDifficulty > 0 && numericDifficulty < 5) {
                 return numericDifficulty;
             } else {
-                System.out.println("Invalid difficulty! Please try again!");
+                System.out.println("You entered: " + difficulty);
                 throw new InputMismatchException();
             }
         }

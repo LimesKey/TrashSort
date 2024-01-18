@@ -1,10 +1,7 @@
 package trashsort;
 
 import java.util.OptionalInt;
-
 public class ItemDb {
-    TrashSort trashSort = new TrashSort();
-
     public static TrashSort.Item[] ItemDBCreator() {
         TrashSort trashSort = new TrashSort();
         TrashSort.Item Item1 = trashSort.new Item("Water Bottle", TrashSort.TrashClassification.RECYCLE, 1, OptionalInt.of(1));
