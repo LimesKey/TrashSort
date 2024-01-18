@@ -35,8 +35,48 @@ public class ItemDb {
         TrashSort.Item Item29 = trashSort.new Item("Junk Mail", TrashSort.TrashClassification.RECYCLE, 1, OptionalInt.of(1));
         TrashSort.Item Item30 = trashSort.new Item("Fruit", TrashSort.TrashClassification.COMPOST, 1, OptionalInt.of(1));
         TrashSort.Item Item31 = trashSort.new Item("Plastic Straw", TrashSort.TrashClassification.LANDFILL, 1, OptionalInt.of(1));
+        TrashSort.Item Item32 = trashSort.new Item("Glass Jar", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item33 = trashSort.new Item("Paper Plate", TrashSort.TrashClassification.COMPOST, 2, OptionalInt.of(1));
+        TrashSort.Item Item34 = trashSort.new Item("Aluminum Can", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item35 = trashSort.new Item("CDs", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item36 = trashSort.new Item("Plastic Plant Pot", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item37 = trashSort.new Item("E-waste", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item38 = trashSort.new Item("Styrofoam", TrashSort.TrashClassification.LANDFILL, 2, OptionalInt.of(1));
+        TrashSort.Item Item39 = trashSort.new Item("CFL Bulbs", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item40 = trashSort.new Item("Pizza Box", TrashSort.TrashClassification.COMPOST, 2, OptionalInt.of(1));
+        TrashSort.Item Item41 = trashSort.new Item("Plastic Clamshell", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item42 = trashSort.new Item("Ink Cartridges", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item43 = trashSort.new Item("Metal Hangers", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item44 = trashSort.new Item("Disposable Diapers", TrashSort.TrashClassification.LANDFILL, 2, OptionalInt.of(1));
+        TrashSort.Item Item45 = trashSort.new Item("Wine Corks", TrashSort.TrashClassification.COMPOST, 2, OptionalInt.of(1));
+        TrashSort.Item Item46 = trashSort.new Item("Plastic CD Cases", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item47 = trashSort.new Item("Paint Cans", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item48 = trashSort.new Item("Ceramics", TrashSort.TrashClassification.LANDFILL, 2, OptionalInt.of(1));
+        TrashSort.Item Item49 = trashSort.new Item("VHS Tapes", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item50 = trashSort.new Item("Plastic Cutlery", TrashSort.TrashClassification.LANDFILL, 2, OptionalInt.of(1));
+        TrashSort.Item Item51 = trashSort.new Item("Foam Cups", TrashSort.TrashClassification.LANDFILL, 2, OptionalInt.of(1));
+        TrashSort.Item Item52 = trashSort.new Item("Plastic Packaging", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item53 = trashSort.new Item("Disposable Cameras", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item54 = trashSort.new Item("Juice Boxes", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item55 = trashSort.new Item("Metallic Gift Wrap", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item56 = trashSort.new Item("Plastic Egg Cartons", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item57 = trashSort.new Item("Tyvek Envelopes", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item58 = trashSort.new Item("Shredded Paper", TrashSort.TrashClassification.COMPOST, 2, OptionalInt.of(1));
+        TrashSort.Item Item59 = trashSort.new Item("Plastic Film", TrashSort.TrashClassification.RECYCLE, 2, OptionalInt.of(1));
+        TrashSort.Item Item60 = trashSort.new Item("Crayons", TrashSort.TrashClassification.SPECIAL, 2, OptionalInt.of(1));
+        TrashSort.Item Item61 = trashSort.new Item("Mercury Thermometers", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item62 = trashSort.new Item("Asbestos", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item63 = trashSort.new Item("Lead-based Paint", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item64 = trashSort.new Item("Radioactive Waste", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item65 = trashSort.new Item("Biomedical Waste", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item66 = trashSort.new Item("Used Needles", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item67 = trashSort.new Item("Plutonium", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item68 = trashSort.new Item("Ebola-contaminated Materials", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item69 = trashSort.new Item("Chemotherapy Drugs", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
+        TrashSort.Item Item70 = trashSort.new Item("Nuclear Reactor Waste", TrashSort.TrashClassification.SPECIAL, 3, OptionalInt.of(1));
 
-        TrashSort.Item ItemDb[] = {Item1, Item2, Item3, Item4, Item5, Item6, Item7, Item8, Item9, Item10, Item11, Item12, Item13, Item14, Item15, Item16, Item17, Item18, Item19, Item20, Item21, Item22, Item23, Item24, Item25, Item26, Item27, Item28, Item29, Item30, Item31};
+
+        TrashSort.Item ItemDb[] = {Item1, Item2, Item3, Item4, Item5, Item6, Item7, Item8, Item9, Item10, Item11, Item12, Item13, Item14, Item15, Item16, Item17, Item18, Item19, Item20, Item21, Item22, Item23, Item24, Item25, Item26, Item27, Item28, Item29, Item30, Item31, Item32, Item33, Item34, Item35, Item36, Item37, Item38, Item39, Item40, Item41, Item42, Item43, Item44, Item45, Item46, Item47, Item48, Item49, Item50, Item51, Item52, Item53, Item54, Item55, Item56, Item57, Item58, Item59, Item60, Item61, Item62, Item63, Item64, Item65, Item66, Item67, Item68, Item69, Item70};
         return ItemDb;
     }
 }

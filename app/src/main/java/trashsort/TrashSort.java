@@ -110,8 +110,6 @@ public class TrashSort {
                 player_list[i] = new Player((scanner.nextLine().strip()), 0);
             }
 
-            assert player_list.length == player_amount;
-
             while (true) {
                 System.out.println("\nPlease choose your difficulty level, normal, hard, extreme or adaptive (either type in word or number)");
                 System.out.print("Game Difficulty: ");
@@ -152,35 +150,44 @@ public class TrashSort {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Starting Adaptive difficulty round, it will get increasingly hard until you get 3 wrong answers or exhaust the database.");
         int player_count = player_list.length;
+        int track_difficulty = 0;
 
-        for (int difficulty = 1; difficulty < 4; difficulty++) {
+        for (int difficulty = 0; difficulty < 4; difficulty++) {
+            track_difficulty++;
+
+            if (difficulty > track_difficulty) {
+                System.out.println(ANSI_YELLOW + "Level up, difficulty is now " + difficulty + "!" + ANSI_RESET);
+            }
+            else {
+                System.out.println("Current Difficulty: " + difficulty);
+            }
+
             int possible_items = 0;
-            System.out.println("Current Difficulty: " + difficulty);
-
             for (int j = 0; j < itemDatabase.length; j++) {
-                if (itemDatabase[j].difficulty == difficulty && itemDatabase[j] != null) {
+                if (itemDatabase[j] != null && itemDatabase[j].difficulty == difficulty) {
                     possible_items++;
                 }
             }
-
+            
             Item[] available_items = new Item[possible_items];
-
+            
             int count = 0;
-            for (int j = 0; j < itemDatabase.length; j++) {
-                if (itemDatabase[j].difficulty == difficulty && itemDatabase[j] != null) {
-                    available_items[count] = itemDatabase[j];
-                    count++;
+            for (int j = 0; j < itemDatabase.length && count < available_items.length; j++) {
+                if (itemDatabase[j] != null && itemDatabase[j].difficulty == difficulty) {
+                    available_items[count++] = itemDatabase[j];
                 }
             }
-            System.out.println(available_items.length + " items available for this round.");
+        
             int avail_split = (int) Math.floorDiv(available_items.length, player_count);
-            int round = 0;
-            for (int player = 0; player < player_count; player++) {
-                round = round * player;
-                System.out.println(player_list[player].name + " (" + player + " of " + player_count + "), " + "it is your turn.");
-                for (; round < avail_split; round++)  {
-                    System.out.println(ANSI_PURPLE + "Round " + (round + 1) + " of " + avail_split + "!" + ANSI_RESET);
-                    System.out.println("Item " + round + ": " + available_items[round].name);
+            System.out.println("Each player will get " + avail_split + " items.");
+            int logical_round = 0;
+            for (int player = 0; player < (player_count); player++) {
+                System.out.println(ANSI_RED + "\n\n" + player_list[player].name + " (" + (player + 1) + " of " + player_count + "), " + "it is your turn." + ANSI_RESET);
+                int visualized_round = 0;
+                for (; logical_round < (avail_split * (player + 1)); logical_round++)  {
+                    visualized_round++;
+                    System.out.println(ANSI_PURPLE + "Round " + visualized_round + " of " + avail_split + " for " + player_list[player].name +"!" + ANSI_RESET);
+                    System.out.println("Item " + visualized_round + ": "+ ANSI_GREEN + available_items[logical_round].name + ANSI_RESET);
                     System.out.println("To which container does this item belong to?");
                     System.out.println("\tPlease choose your answer by typing in a word: Recycle, Compost, Landfill, Special\n");
                     System.out.print("Answer: ");
@@ -191,12 +198,12 @@ public class TrashSort {
                     .strip() // strip leading whitespace
                     .replaceAll("[^\\p{ASCII}]", ""); // use regex to replace non-ascii characters
 
-                    String correctAnswer = available_items[round].classification.toString().toLowerCase();
+                    String correctAnswer = available_items[logical_round].classification.toString().toLowerCase();
 
                     if (userAnswer.equals(correctAnswer)) {
                         System.out.println("Correct!");
-                        if (available_items[round].points.isPresent()) {
-                            player_list[player].score += available_items[round].points.getAsInt();
+                        if (available_items[logical_round].points.isPresent()) {
+                            player_list[player].score += available_items[logical_round].points.getAsInt();
                         }
                         player_list[player].score += 1;
                     }
