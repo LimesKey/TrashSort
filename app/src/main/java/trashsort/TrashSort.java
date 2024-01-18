@@ -5,7 +5,7 @@ import java.util.OptionalInt;
 import java.util.Scanner;
 
 public class TrashSort {
-
+    
     public class Item {
         public String name;
         public TrashClassification classification;
