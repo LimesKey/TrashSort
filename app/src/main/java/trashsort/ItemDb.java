@@ -3,7 +3,6 @@ package trashsort;
 import java.util.OptionalInt;
 
 import trashsort.TrashSort.Item;
-import trashsort.TrashSort.Player;
 import trashsort.TrashSort.TrashClassification;
 
 public class ItemDb {

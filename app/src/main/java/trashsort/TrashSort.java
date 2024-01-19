@@ -112,12 +112,12 @@ public class TrashSort {
             }
 
             while (true) {
-                System.out.println("\nPlease choose your difficulty level, normal, hard, extreme or adaptive (either type in word or number)");
+                System.out.println("\nPlease choose your difficulty level, normal, hard or adaptive (either type in word or number)");
                 System.out.print("Game Difficulty: ");
                 String difficulty = scanner.nextLine();
 
                 try {
-                    sanitizedDifficulty = matchDifficultyText(difficulty.toLowerCase().strip());
+                    sanitizedDifficulty = tools.matchDifficultyText(difficulty.toLowerCase().strip());
                     break;
                 } 
                 catch (InputMismatchException e) {
@@ -128,16 +128,31 @@ public class TrashSort {
             }
 
             long start = System.nanoTime();
-            if (sanitizedDifficulty == 4) {
-                Player[] new_player_list = adaptive(itemDatabase, player_list);
-                for (int i = 0; i < new_player_list.length; i++) {
+            switch (sanitizedDifficulty) {
+                case 1: {
+                    for (int i = 0; i < player_list.length; i++) {
+                        player_list[i] = classicalNormal(player_list[i], itemDatabase);
+                        System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
+                    }
+                    break;
+                }
+
+                case 2: {
+                    for (int i = 0; i < player_list.length; i++) {
+                        player_list[i] = classicalHard(player_list[i], itemDatabase);
+                        System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
+                    }
+                    break;
+                }
+
+                case 3: {
+                    Player[] new_player_list = adaptive(itemDatabase, player_list);
+                    for (int i = 0; i < new_player_list.length; i++) {
                     System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
+                    }
                 }
             }
-
-            else {
-                // classical function
-            }
+            
             
             long end = System.nanoTime();
             long elapsedTime = (end - start) / 1000000000;
@@ -190,7 +205,7 @@ public class TrashSort {
                     .strip() // strip leading whitespace
                     .replaceAll("[^\\p{ASCII}]", ""); // use regex to replace non-ascii characters
 
-                    TrashClassification sanUserAnswer = matchTrashClassification(userAnswer);
+                    TrashClassification sanUserAnswer = tools.matchTrashClassification(userAnswer);
 
                     TrashClassification correctAnswer = available_items[logical_round].classification;
 
@@ -220,81 +235,7 @@ public class TrashSort {
         return player_list;
     }
 
-    public static TrashClassification matchTrashClassification(String classification) {
-        if (classification.isEmpty()) {
-            throw new InputMismatchException();
-        }
-        if (classification.matches("\\A\\p{ASCII}*\\z")) {
-            switch (classification) {
-                case "recycle":
-                    return TrashClassification.RECYCLE;
-                case "compost":
-                    return TrashClassification.COMPOST;
-                case "landfill":
-                    return TrashClassification.LANDFILL;
-                case "special":
-                    return TrashClassification.SPECIAL;
-                default:
-                    throw new InputMismatchException();
-            }
-        }
-
-        else if (classification.matches("\\d")) {
-            int numericClassification = Integer.parseInt(classification);
-            if (numericClassification > 0 && numericClassification < 5) {
-                switch (numericClassification) {
-                    case 1:
-                        return TrashClassification.RECYCLE;
-                    case 2:
-                        return TrashClassification.COMPOST;
-                    case 3:
-                        return TrashClassification.LANDFILL;
-                    case 4:
-                        return TrashClassification.SPECIAL;
-                    default:
-                        throw new InputMismatchException();
-                }
-            }
-            else {
-                throw new InputMismatchException();
-            }
-        }
-        else {
-            throw new InputMismatchException();
-        }
-    }
-
-    public static int matchDifficultyText(String difficulty) throws InputMismatchException {
-        if (!difficulty.isEmpty() && !difficulty.matches("\\d")) {
-            switch (difficulty) {
-                case "normal":
-                    return 1;
-                case "hard":
-                    return 2;
-                case "extreme":
-                    return 3;
-                case "adaptive":
-                    return 4;
-                default:
-                    System.out.println("You entered: " + difficulty);
-                    throw new InputMismatchException();
-            }
-        } else {
-            int numericDifficulty = Integer.parseInt(difficulty);
-            if (numericDifficulty > 0 && numericDifficulty < 5) {
-                return numericDifficulty;
-            } else {
-                System.out.println("You entered: " + difficulty);
-                throw new InputMismatchException();
-            }
-        }
-    }
-
-    public static long calculatePoints(long time, int difficulty, int bonusPoints) {
-        return Math.round((bonusPoints / time) * difficulty) * 10;
-    }
-
-public static Player classic(Player player, Item[] itemDatabase) {
+public static Player classicalNormal(Player player, Item[] itemDatabase) {
     // DECLARE VARIABLES + OBJECTS (for easyMethod2 function)
     Scanner scanS = new Scanner(System.in);
     int Count = 0;
@@ -310,7 +251,7 @@ public static Player classic(Player player, Item[] itemDatabase) {
             int itemEasyLANDFILL = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
             itemDatabaseEasy[itemEasyLANDFILL] +" go?");
-            userAnswer = matchTrashClassification(scanS.nextLine());
+            userAnswer = tools.matchTrashClassification(scanS.nextLine());
             systemAnswer = itemDatabaseEasy[itemEasyLANDFILL].classification;
 
             if (userAnswer == systemAnswer) {
@@ -331,7 +272,7 @@ public static Player classic(Player player, Item[] itemDatabase) {
             int itemEasyRECYCLING = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
             itemDatabaseEasy[itemEasyRECYCLING] +" go?");
-            userAnswer = matchTrashClassification(scanS.nextLine());
+            userAnswer = tools.matchTrashClassification(scanS.nextLine());
             systemAnswer = itemDatabaseEasy[itemEasyRECYCLING].classification;
 
             if (userAnswer == systemAnswer) {
@@ -351,7 +292,7 @@ public static Player classic(Player player, Item[] itemDatabase) {
             int itemEasyCOMPOST = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
             itemDatabaseEasy[itemEasyCOMPOST] +" go?");
-            userAnswer = matchTrashClassification(scanS.nextLine());
+            userAnswer = tools.matchTrashClassification(scanS.nextLine());
             systemAnswer = itemDatabaseEasy[itemEasyCOMPOST].classification;
 
             if (userAnswer == systemAnswer) {
@@ -372,4 +313,89 @@ public static Player classic(Player player, Item[] itemDatabase) {
     scanS.close();
     return player;
   } // End of easyMethod2 statement
+
+public static Player classicalHard(Player player, Item[] itemDatabase) {
+    // DECLARE VARIABLES + OBJECTS (for mediumMethod2 function)
+    Scanner scanS = new Scanner(System.in);
+    int Count = 0;
+    TrashClassification userAnswer;
+    TrashClassification systemAnswer;
+    System.out.println("------------------------------------------------");
+    System.out.println("Congratulations, You've made it to MEDIUM mode." +
+      "Things are gonna get slightly trickier.");
+    do {
+        int selection = (int)(1 + Math.random() * 3);
+        switch (selection) {
+            // Create case for garbageEASY
+            case 1: {
+                Item[] itemDatabaseHard = ItemDb.searchItemDbClassification(TrashClassification.LANDFILL, itemDatabase);
+                itemDatabaseHard = ItemDb.searchItemDbDifficulty(2, itemDatabase);
+                int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
+                System.out.println("Where does " +
+                itemDatabaseHard[itemEasy] +" go?");
+                userAnswer = tools.matchTrashClassification(scanS.nextLine());
+                systemAnswer = itemDatabaseHard[itemEasy].classification;
+    
+                if (userAnswer == systemAnswer) {
+                    System.out.println(ANSI_GREEN + "Correct! " +
+                    "You get a point!\n" + ANSI_RESET);
+                    Count++;
+                } 
+    
+                else {
+                    System.out.println(ANSI_RED + "Incorrect, " +
+                    "Try again\n" + ANSI_RESET);
+                }
+                break;
+            }
+    
+            case 2: {
+                Item[] itemDatabaseHard = ItemDb.searchItemDbClassification(TrashClassification.RECYCLE, itemDatabase);
+                itemDatabaseHard = ItemDb.searchItemDbDifficulty(2, itemDatabase);
+                int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
+                System.out.println("Where does " +
+                itemDatabaseHard[itemEasy] +" go?");
+                userAnswer = tools.matchTrashClassification(scanS.nextLine());
+                systemAnswer = itemDatabaseHard[itemEasy].classification;
+    
+                if (userAnswer == systemAnswer) {
+                    System.out.println(ANSI_GREEN + "Correct! " +
+                    "You get a point!\n" + ANSI_RESET);
+                    Count++;
+                } 
+    
+                else {
+                    System.out.println(ANSI_RED + "Incorrect, " +
+                    "Try again\n" + ANSI_RESET);
+                }
+                break;
+            }
+            case 3: {
+                Item[] itemDatabaseHard = ItemDb.searchItemDbClassification(TrashClassification.COMPOST, itemDatabase);
+                itemDatabaseHard = ItemDb.searchItemDbDifficulty(2, itemDatabase);
+                int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
+                System.out.println("Where does " +
+                itemDatabaseHard[itemEasy] +" go?");
+                userAnswer = tools.matchTrashClassification(scanS.nextLine());
+                systemAnswer = itemDatabaseHard[itemEasy].classification;
+    
+                if (userAnswer == systemAnswer) {
+                    System.out.println(ANSI_GREEN + "Correct! " +
+                    "You get a point!\n" + ANSI_RESET);
+                    Count++;
+                } 
+    
+                else {
+                    System.out.println(ANSI_RED + "Incorrect, " +
+                    "Try again\n" + ANSI_RESET);
+                }
+                break;
+            }
+        }
+      // Final do While Test coniditon for HARD
+    } while (Count <= 5);
+    player.score = Count;
+    scanS.close();
+    return player;
+  } // End of mediumMethod2 FUNCTION
 }
