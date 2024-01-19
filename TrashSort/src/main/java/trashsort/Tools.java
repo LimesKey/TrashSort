@@ -4,9 +4,9 @@ import trashsort.TrashSort.*;
 import java.util.InputMismatchException;
 
 public class Tools {
-    public static long calculatePoints(long time, int difficulty, int bonusPoints) {
-        return Math.round((bonusPoints / time) * difficulty) * 10;
-    }
+    // public static long calculatePoints(long time, int difficulty, int bonusPoints) {
+    //     return Math.round((bonusPoints / time) * difficulty) * 10;                       to be edited later
+    // }
 
     public static int matchDifficultyText(String difficulty) throws InputMismatchException {
         if (!difficulty.isEmpty() && !difficulty.matches("\\d")) {
@@ -33,6 +33,8 @@ public class Tools {
     }
 
     public static TrashClassification matchTrashClassification(String classification) {
+        classification = classification.toLowerCase().strip();
+        
         if (classification.isEmpty()) {
             System.out.println("Input Mismatch Exception: Empty String!");
         }

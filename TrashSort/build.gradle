@@ -35,4 +35,6 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-run {}
+run {
+    standardInput = System.in
+}

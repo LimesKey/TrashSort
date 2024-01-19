@@ -84,7 +84,7 @@ public class Levels {
                 }
             }
         }
-        scanner.close();
+        // scanner.close();
         return player_list;
     }
 
@@ -174,8 +174,8 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
     TrashClassification userAnswer;
     TrashClassification systemAnswer;
     System.out.println("------------------------------------------------");
-    System.out.println("Congratulations, You've made it to MEDIUM mode." +
-      "Things are gonna get slightly trickier.");
+    System.out.println("Congratulations, You've made it to HARD mode." +
+      "Things are gonna get more tricky!");
     do {
         int selection = (int)(1 + Math.random() * 3);
         switch (selection) {
