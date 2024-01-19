@@ -8,8 +8,8 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'java'
-    id 'application'
+    id('java')
+    id('application')
 }
 
 repositories {

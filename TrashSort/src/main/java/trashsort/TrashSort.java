@@ -49,84 +49,98 @@ public class TrashSort {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
+    
         Item[] itemDatabase = ItemDb.ItemDBCreator(); // fetches the Item database from another file's function
         int intro_decision = 0;
         int sanitizedDifficulty;
         int player_amount;
+    
+        System.out.println(CYAN + "WELCOME TRASH-SORTING-SIMULATOR!" + ANSI_RESET);
+    
+        while (intro_decision != 3) {
+            while (!(0 > intro_decision && intro_decision > 3)) {
+    
+                System.out.println
+                        ("\nWould you like to: " +
+                                "\n\t1. Play the game" +
+                                "\n\t2. Help" +
+                                "\n\t3. Exit");
+    
+                System.out.print("Choice: ");
+                intro_decision = Integer.parseInt(scanner.nextLine());
 
-        while (!(intro_decision >= 1 && intro_decision <= 3)) {
-            System.out.println(CYAN + "WELCOME TRASH-SORTING-SIMULATOR!" + ANSI_RESET);
-
-            System.out.println
-            ("\nWould you like to: " +
-            "\n1.Play the game" +
-            "\n2.Help" +
-            "\n3.Exit");
-
-            System.out.print("Choice: ");
-            intro_decision = Integer.parseInt(scanner.nextLine());
-
-            if (intro_decision == 3) {
-                break;
-            }
-
-            switch (intro_decision) {
-                case 2: {   // IF they want "help" or clarification on the program:
-                    System.out.println("The purpose of this game is to have you" +
-                    "(the user) \nassort various " +
-                    "COMPOST,RECYCLING, or GARBAGE\nitems into the correct" +
-                    " trash bins." +
-                    "\nFOR EXAMPLE: Plastic Straws would go in the garbage.");
-                }
-            
-                case 1: { // IF they want to play the game
+               if (intro_decision == 3) {
+                   break;
+               }
+               else if (intro_decision == 1) {
+                    break;
+               }
+                 
+                switch (intro_decision) {
+                    case 1: { // IF they want to play the game
                         // CREATE ENTIRE GAME MENU GUI IF THEY WANT TO PLAY THE GAME! 
                         System.out.println(ANSI_GREEN + "\nDESCRIPTION:" + ANSI_RESET);
                         System.out.println(" A trash-sorting game in which a user receives " +
-                        "random items and their task\n is sorting them in the " +
-                        "correct corresponding trash bins. The more they get correct,\n " +
-                        "the harder it gets. Score 9 correct points and you win!!");
+                                "random items and their task\n is sorting them in the " +
+                                "correct corresponding trash bins. The more they get correct,\n " +
+                                "the harder it gets. Score 9 correct points and you win!!");
                         System.out.print(ANSI_GREEN + "\t\t\t\t\tGOODLUCK!\n" + ANSI_RESET);
                         System.out.println(CYAN + "\n ** NOTE. 1 = Recycle, 2 = Compost, " +
-                        "3 = Landfill or maybe 4 = Special **" + ANSI_RESET);
+                                "3 = Landfill or maybe 4 = Special **" + ANSI_RESET);
                         break;
                     }
-                case 3: System.out.println("Ending program..."); // if they want to end it
     
-                default: {
-                    System.err.println("Invalid input, please try again!");
+                    case 2: {   // IF they want "help" or clarification on the program:
+                        System.out.println(ANSI_BLUE + "\nThe purpose of this game is to have you" +
+                                "(the user) \nassort various " +
+                                "COMPOST, RECYCLING, or GARBAGE\nitems into the correct" +
+                                " trash bins." +
+                                "\nFOR EXAMPLE: Plastic Straws would go in the garbage." + ANSI_RESET);
+                        break;
+                    }
+    
+                    case 3: {
+                        break;
+                    }
+    
+                    default: {
+                        System.err.println("Invalid input, please try again!");
+                        continue;
+                    }
                 }
             }
-
+    
+            if (intro_decision == 3) {
+                break;
+            }
+    
             do {
                 System.out.println("Please enter the amount of players: ");
                 player_amount = Integer.parseInt(scanner.nextLine());
             } while (player_amount < 0 || player_amount > 10);
-
+    
             Player[] player_list = new Player[player_amount];
-
+    
             for (int i = 0; i < player_amount; i++) {
                 System.out.println("Please enter the name for player " + (i + 1) + ": ");
                 player_list[i] = new Player((scanner.nextLine().strip()), 0, false);
             }
-
+    
             while (true) {
                 System.out.println("\nPlease choose your difficulty level, normal, hard or adaptive (either type in word or number)");
                 System.out.print("Game Difficulty: ");
                 String difficulty = scanner.nextLine();
-
+    
                 try {
                     sanitizedDifficulty = tools.matchDifficultyText(difficulty.toLowerCase().strip());
                     break;
-                } 
-                catch (InputMismatchException e) {
+                } catch (InputMismatchException e) {
                     System.out.println("Invalid difficulty! Please try again!");
                     System.out.print(" You entered: " + difficulty);
                     System.out.println("Error message: " + e);
                 }
             }
-
+    
             long start = System.nanoTime();
             switch (sanitizedDifficulty) {
                 case 1: {
@@ -136,7 +150,7 @@ public class TrashSort {
                     }
                     break;
                 }
-
+    
                 case 2: {
                     for (int i = 0; i < player_list.length; i++) {
                         player_list[i] = classicalHard(player_list[i], itemDatabase);
@@ -144,23 +158,27 @@ public class TrashSort {
                     }
                     break;
                 }
-
+    
                 case 3: {
                     Player[] new_player_list = adaptive(itemDatabase, player_list);
                     for (int i = 0; i < new_player_list.length; i++) {
-                    System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
+                        System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
                     }
                 }
             }
-            
-            
+    
+    
             long end = System.nanoTime();
             long elapsedTime = (end - start) / 1000000000;
-
+    
             System.out.println("Game Over! Elapsed Time: " + elapsedTime + " seconds");
+    
+            System.out.println("Thank you for playing! Program ending...");
         }
+        System.out.println("Thank you for playing!");
         scanner.close();
     }
+    
 
     public static Player[] adaptive(Item[] itemDatabase, Player[] player_list) {
         Scanner scanner = new Scanner(System.in);

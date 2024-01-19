@@ -8,4 +8,4 @@
  */
 
 rootProject.name = 'TrashSort'
-include('app')
+include('TrashSort')
