@@ -68,7 +68,12 @@ public class TrashSort {
     
                 System.out.print("Choice: ");
                 scanner.reset();
-                intro_decision = Integer.parseInt(scanner.nextLine()); // parse string to int
+                if (scanner.hasNextLine()) {
+                    intro_decision = Integer.parseInt(scanner.nextLine()); // parse string to int
+                }
+                else {
+                    
+                }
 
                if (intro_decision == 3) {
                    break;

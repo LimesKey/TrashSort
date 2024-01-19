@@ -2,6 +2,7 @@ package trashsort;
 import java.util.Scanner;
 import trashsort.TrashSort.Item;
 import trashsort.TrashSort.Player;
+import java.util.InputMismatchException;
 import trashsort.TrashSort.TrashClassification;
 
 public class Levels {
@@ -20,6 +21,7 @@ public class Levels {
         int player_count = player_list.length; // get amount of players
         int track_difficulty = 1; // tracks changes in difficiulty
         int logical_round; // rounds according to the computer indexing from 0
+        TrashClassification sanUserAnswer;
 
         for (int difficulty = 1; difficulty < 4; difficulty++) {
             track_difficulty++; // watch for changes in difficulty
@@ -28,7 +30,7 @@ public class Levels {
                 System.out.println(ANSI_YELLOW + "Level up, difficulty is now " + difficulty + "!" + ANSI_RESET);
             }
             else {
-                System.out.println("Current Difficulty: " + difficulty);
+                System.out.println(ANSI_PURPLE + "Current Difficulty: " + difficulty + ANSI_RESET);
             }
 
             Item[] available_items = ItemDb.searchItemDbDifficulty(difficulty, itemDatabase);
@@ -58,7 +60,12 @@ public class Levels {
                     .strip() // strip leading whitespace
                     .replaceAll("[^\\p{ASCII}]", ""); // use regex to replace non-ascii characters
 
-                    TrashClassification sanUserAnswer = Tools.matchTrashClassification(userAnswer);
+                    try {            
+                        sanUserAnswer = Tools.matchTrashClassification(userAnswer);
+                    } catch (InputMismatchException e) {
+                        System.out.println("Incorrect Input, not one of the options!");
+                        continue;
+                    }
 
                     TrashClassification correctAnswer = available_items[logical_round].classification;
 
@@ -104,7 +111,11 @@ public static Player classicalNormal(Player player, Item[] itemDatabase) {
             int itemEasyLANDFILL = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
             itemDatabaseEasy[itemEasyLANDFILL].name +" go?");
-            userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+            try {            
+                userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+            } catch (InputMismatchException e) {
+                continue;
+            }
             systemAnswer = itemDatabaseEasy[itemEasyLANDFILL].classification;
 
             if (userAnswer == systemAnswer) {
@@ -125,7 +136,12 @@ public static Player classicalNormal(Player player, Item[] itemDatabase) {
             int itemEasyRECYCLING = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
             itemDatabaseEasy[itemEasyRECYCLING].name +" go?");
-            userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+
+            try {            
+                userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+            } catch (InputMismatchException e) {
+                continue;
+            }            
             systemAnswer = itemDatabaseEasy[itemEasyRECYCLING].classification;
 
             if (userAnswer == systemAnswer) {
@@ -145,7 +161,11 @@ public static Player classicalNormal(Player player, Item[] itemDatabase) {
             int itemEasyCOMPOST = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
             itemDatabaseEasy[itemEasyCOMPOST].name +" go?");
-            userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+            try {            
+                userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+            } catch (InputMismatchException e) {
+                continue;
+            }            
             systemAnswer = itemDatabaseEasy[itemEasyCOMPOST].classification;
 
             if (userAnswer == systemAnswer) {
@@ -186,7 +206,11 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
                 int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
                 System.out.println("Where does " +
                 itemDatabaseHard[itemEasy].name +" go?");
-                userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+                try {            
+                    userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+                } catch (InputMismatchException e) {
+                    continue;
+                }                
                 systemAnswer = itemDatabaseHard[itemEasy].classification;
     
                 if (userAnswer == systemAnswer) {
@@ -208,7 +232,11 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
                 int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
                 System.out.println("Where does " +
                 itemDatabaseHard[itemEasy].name+" go?");
-                userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+                try {            
+                    userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+                } catch (InputMismatchException e) {
+                    continue;
+                }                
                 systemAnswer = itemDatabaseHard[itemEasy].classification;
     
                 if (userAnswer == systemAnswer) {
@@ -229,7 +257,11 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
                 int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
                 System.out.println("Where does " +
                 itemDatabaseHard[itemEasy].name +" go?");
-                userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+                try {            
+                    userAnswer = Tools.matchTrashClassification(scanS.nextLine());
+                } catch (InputMismatchException e) {
+                    continue;
+                }
                 systemAnswer = itemDatabaseHard[itemEasy].classification;
     
                 if (userAnswer == systemAnswer) {

@@ -71,12 +71,12 @@ public class Tools {
                 }
             }
             else {
-                System.out.println("Invalid Input!");
+                System.out.println("Invalid Input! Skipping turn...");
                 throw new InputMismatchException();
             }
         }
         else {
-            System.out.println("Invalid Input!");
+            System.out.println("Invalid Input! Skipping turn...");
             throw new InputMismatchException();
         }
     }
