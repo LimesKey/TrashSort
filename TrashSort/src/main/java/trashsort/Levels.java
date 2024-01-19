@@ -102,7 +102,7 @@ public static Player classicalNormal(Player player, Item[] itemDatabase) {
             Item[] itemDatabaseEasy = ItemDb.searchItemDbClassification(TrashClassification.LANDFILL, itemDatabase);
             int itemEasyLANDFILL = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
-            itemDatabaseEasy[itemEasyLANDFILL] +" go?");
+            itemDatabaseEasy[itemEasyLANDFILL].name +" go?");
             userAnswer = Tools.matchTrashClassification(scanS.nextLine());
             systemAnswer = itemDatabaseEasy[itemEasyLANDFILL].classification;
 
@@ -123,7 +123,7 @@ public static Player classicalNormal(Player player, Item[] itemDatabase) {
             Item[] itemDatabaseEasy = ItemDb.searchItemDbClassification(TrashClassification.RECYCLE, itemDatabase);
             int itemEasyRECYCLING = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
-            itemDatabaseEasy[itemEasyRECYCLING] +" go?");
+            itemDatabaseEasy[itemEasyRECYCLING].name +" go?");
             userAnswer = Tools.matchTrashClassification(scanS.nextLine());
             systemAnswer = itemDatabaseEasy[itemEasyRECYCLING].classification;
 
@@ -143,7 +143,7 @@ public static Player classicalNormal(Player player, Item[] itemDatabase) {
             Item[] itemDatabaseEasy = ItemDb.searchItemDbClassification(TrashClassification.COMPOST, itemDatabase);
             int itemEasyCOMPOST = (int)(Math.random() * (itemDatabaseEasy.length));
             System.out.println("Where does " +
-            itemDatabaseEasy[itemEasyCOMPOST] +" go?");
+            itemDatabaseEasy[itemEasyCOMPOST].name +" go?");
             userAnswer = Tools.matchTrashClassification(scanS.nextLine());
             systemAnswer = itemDatabaseEasy[itemEasyCOMPOST].classification;
 
@@ -184,7 +184,7 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
                 itemDatabaseHard = ItemDb.searchItemDbDifficulty(2, itemDatabase);
                 int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
                 System.out.println("Where does " +
-                itemDatabaseHard[itemEasy] +" go?");
+                itemDatabaseHard[itemEasy].name +" go?");
                 userAnswer = Tools.matchTrashClassification(scanS.nextLine());
                 systemAnswer = itemDatabaseHard[itemEasy].classification;
     
@@ -206,7 +206,7 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
                 itemDatabaseHard = ItemDb.searchItemDbDifficulty(2, itemDatabase);
                 int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
                 System.out.println("Where does " +
-                itemDatabaseHard[itemEasy] +" go?");
+                itemDatabaseHard[itemEasy].name+" go?");
                 userAnswer = Tools.matchTrashClassification(scanS.nextLine());
                 systemAnswer = itemDatabaseHard[itemEasy].classification;
     
@@ -227,7 +227,7 @@ public static Player classicalHard(Player player, Item[] itemDatabase) {
                 itemDatabaseHard = ItemDb.searchItemDbDifficulty(2, itemDatabase);
                 int itemEasy = (int)(Math.random() * (itemDatabaseHard.length));
                 System.out.println("Where does " +
-                itemDatabaseHard[itemEasy] +" go?");
+                itemDatabaseHard[itemEasy].name +" go?");
                 userAnswer = Tools.matchTrashClassification(scanS.nextLine());
                 systemAnswer = itemDatabaseHard[itemEasy].classification;
     
