@@ -3,7 +3,7 @@ package trashsort;
 import trashsort.TrashSort.*;
 import java.util.InputMismatchException;
 
-public class tools {
+public class Tools {
     public static long calculatePoints(long time, int difficulty, int bonusPoints) {
         return Math.round((bonusPoints / time) * difficulty) * 10;
     }
