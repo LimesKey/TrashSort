@@ -34,8 +34,9 @@ public class Tools {
 
     public static TrashClassification matchTrashClassification(String classification) {
         if (classification.isEmpty()) {
-            throw new InputMismatchException();
+            System.out.println("Input Mismatch Exception: Empty String!");
         }
+
         if (classification.matches("\\A\\p{ASCII}*\\z")) {
             switch (classification) {
                 case "recycle":
@@ -68,10 +69,12 @@ public class Tools {
                 }
             }
             else {
+                System.out.println("Invalid Input!");
                 throw new InputMismatchException();
             }
         }
         else {
+            System.out.println("Invalid Input!");
             throw new InputMismatchException();
         }
     }

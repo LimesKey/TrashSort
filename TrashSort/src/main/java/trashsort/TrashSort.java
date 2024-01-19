@@ -57,8 +57,8 @@ public class TrashSort {
     
         System.out.println(CYAN + "WELCOME TRASH-SORTING-SIMULATOR!" + ANSI_RESET);
     
-        while (intro_decision != 3) {
-            while (!(0 > intro_decision && intro_decision > 3)) {
+        while (intro_decision != 3) { // while the user didnt select to exit 
+            while (!(0 > intro_decision && intro_decision > 3)) { // error trap for user introduction input to game
     
                 System.out.println
                         ("\nWould you like to: " +
@@ -67,7 +67,7 @@ public class TrashSort {
                                 "\n\t3. Exit");
     
                 System.out.print("Choice: ");
-                intro_decision = Integer.parseInt(scanner.nextLine());
+                intro_decision = Integer.parseInt(scanner.nextLine()); // oarse string to int
 
                if (intro_decision == 3) {
                    break;
@@ -83,7 +83,7 @@ public class TrashSort {
                         System.out.println(" A trash-sorting game in which a user receives " +
                                 "random items and their task\n is sorting them in the " +
                                 "correct corresponding trash bins. The more they get correct,\n " +
-                                "the harder it gets. Score 9 correct points and you win!!");
+                                "the harder it gets. Score 9 correct points and you win!!"); // small instructions
                         System.out.print(ANSI_GREEN + "\t\t\t\t\tGOODLUCK!\n" + ANSI_RESET);
                         System.out.println(CYAN + "\n ** NOTE. 1 = Recycle, 2 = Compost, " +
                                 "3 = Landfill or maybe 4 = Special **" + ANSI_RESET);
@@ -93,55 +93,55 @@ public class TrashSort {
                     case 2: {   // IF they want "help" or clarification on the program:
                         System.out.println(ANSI_BLUE + "\nThe purpose of this game is to have you" +
                                 "(the user) \nassort various " +
-                                "COMPOST, RECYCLING, or GARBAGE\nitems into the correct" +
+                                "COMPOST, RECYCLING, or GARBAGE\nitems into the correct" + // help instructions
                                 " trash bins." +
                                 "\nFOR EXAMPLE: Plastic Straws would go in the garbage." + ANSI_RESET);
                         break;
                     }
     
                     case 3: {
-                        break;
+                        break; // exit the game
                     }
     
                     default: {
-                        System.err.println("Invalid input, please try again!");
+                        System.err.println("Invalid input, please try again!"); // anything else just in case
                         continue;
                     }
                 }
             }
     
             if (intro_decision == 3) {
-                break;
+                break; // break again to exit the game
             }
     
             do {
                 System.out.println("Please enter the amount of players: ");
                 player_amount = Integer.parseInt(scanner.nextLine());
-            } while (player_amount < 0 || player_amount > 10);
+            } while (player_amount < 0 || player_amount >= 10); // only allows 1 - 10 players
     
-            Player[] player_list = new Player[player_amount];
+            Player[] player_list = new Player[player_amount]; // creates an array of players
     
             for (int i = 0; i < player_amount; i++) {
                 System.out.println("Please enter the name for player " + (i + 1) + ": ");
-                player_list[i] = new Player((scanner.nextLine().strip()), 0, false);
+                player_list[i] = new Player((scanner.nextLine().strip()), 0, false); // creates a new player object and assigns a name and a default score of 0
             }
     
             while (true) {
                 System.out.println("\nPlease choose your difficulty level, normal, hard or adaptive (either type in word or number)");
-                System.out.print("Game Difficulty: ");
+                System.out.print("Game Difficulty: "); // difficulty for entire game
                 String difficulty = scanner.nextLine();
     
                 try {
-                    sanitizedDifficulty = Tools.matchDifficultyText(difficulty.toLowerCase().strip());
+                    sanitizedDifficulty = Tools.matchDifficultyText(difficulty.toLowerCase().strip()); // function to handle converting user inputted difficulty to int
                     break;
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid difficulty! Please try again!");
-                    System.out.print(" You entered: " + difficulty);
+                    System.out.print(" You entered: " + difficulty); // something went wrong
                     System.out.println("Error message: " + e);
                 }
             }
     
-            long start = System.nanoTime();
+            long start = System.nanoTime(); // track time to calculate score
             switch (sanitizedDifficulty) {
                 case 1: {
                     for (int i = 0; i < player_list.length; i++) {
@@ -169,10 +169,10 @@ public class TrashSort {
     
     
             long end = System.nanoTime();
-            long elapsedTime = (end - start) / 1000000000;
+            long elapsedTime = (end - start) / 1000000000; // calculate elapsed time in seconds
     
             System.out.println("Game Over! Elapsed Time: " + elapsedTime + " seconds");
-    
+            
             System.out.println("Thank you for playing! Program ending...");
         }
         System.out.println("Thank you for playing!");

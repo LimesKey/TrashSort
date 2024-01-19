@@ -17,11 +17,12 @@ public class Levels {
      public static Player[] adaptive(Item[] itemDatabase, Player[] player_list) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Starting Adaptive difficulty round, it will get increasingly harder until you get 3 wrong answers or exhaust the database.");
-        int player_count = player_list.length;
-        int track_difficulty = 1;
+        int player_count = player_list.length; // get amount of players
+        int track_difficulty = 1; // tracks changes in difficiulty
+        int logical_round; // rounds according to the computer indexing from 0
 
         for (int difficulty = 1; difficulty < 4; difficulty++) {
-            track_difficulty++;
+            track_difficulty++; // watch for changes in difficulty
 
             if (difficulty > track_difficulty) {
                 System.out.println(ANSI_YELLOW + "Level up, difficulty is now " + difficulty + "!" + ANSI_RESET);
@@ -34,15 +35,15 @@ public class Levels {
         
             int avail_split = (int) Math.floorDiv(available_items.length, player_count);
             System.out.println("Each player will get " + avail_split + " items.");
-            int logical_round = 0;
-            for (int player = 0; player < (player_count); player++) {
-                if (player_list[player].eliminated) {
+            logical_round = 0;
+            for (int player = 0; player < (player_count); player++) { // for every player
+                if (player_list[player].eliminated) { // that is not eliminated
                     continue;
                 }
                 System.out.println(ANSI_RED + "\n\n" + player_list[player].name + " (" + (player + 1) + " of " + player_count + "), " + "it is your turn." + ANSI_RESET);
 
-                int visualized_round = 0;
-                int wrong_answers = 0;
+                int visualized_round = 0; // for printing out the current round, not to be used for indexing player array
+                int wrong_answers = 0; // wrong answers per player for score calculation
                 for (; logical_round < (avail_split * (player + 1)); logical_round++)  {
                     visualized_round++;
                     System.out.println(ANSI_PURPLE + "Round " + visualized_round + " of " + avail_split + " for " + player_list[player].name +"!" + ANSI_RESET);
