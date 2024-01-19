@@ -1,6 +1,11 @@
 package trashsort;
 
 import java.util.OptionalInt;
+
+import trashsort.TrashSort.Item;
+import trashsort.TrashSort.Player;
+import trashsort.TrashSort.TrashClassification;
+
 public class ItemDb {
     public static TrashSort.Item[] ItemDBCreator() {
         TrashSort trashSort = new TrashSort();
@@ -78,5 +83,45 @@ public class ItemDb {
 
         TrashSort.Item ItemDb[] = {Item1, Item2, Item3, Item4, Item5, Item6, Item7, Item8, Item9, Item10, Item11, Item12, Item13, Item14, Item15, Item16, Item17, Item18, Item19, Item20, Item21, Item22, Item23, Item24, Item25, Item26, Item27, Item28, Item29, Item30, Item31, Item32, Item33, Item34, Item35, Item36, Item37, Item38, Item39, Item40, Item41, Item42, Item43, Item44, Item45, Item46, Item47, Item48, Item49, Item50, Item51, Item52, Item53, Item54, Item55, Item56, Item57, Item58, Item59, Item60, Item61, Item62, Item63, Item64, Item65, Item66, Item67, Item68, Item69, Item70};
         return ItemDb;
+    }
+
+    public static Item[] searchItemDbDifficulty(int difficulty, TrashSort.Item[] ItemDb) {
+        int possible_items = 0;
+
+        for (int j = 0; j < ItemDb.length; j++) {
+            if (ItemDb[j] != null && ItemDb[j].difficulty == difficulty) {
+                possible_items++;
+            }
+        }
+            
+        Item[] available_items = new Item[possible_items];
+            
+        int count = 0;
+        for (int j = 0; j < ItemDb.length && count < available_items.length; j++) {
+            if (ItemDb[j] != null && ItemDb[j].difficulty == difficulty) {
+                available_items[count++] = ItemDb[j];
+            }
+        }
+        return available_items;
+    }
+
+    public static Item[] searchItemDbClassification(TrashClassification req_classification, TrashSort.Item[] ItemDb) {
+        int possible_items = 0;
+
+        for (int j = 0; j < ItemDb.length; j++) {
+            if (ItemDb[j] != null && ItemDb[j].classification == req_classification) {
+                possible_items++;
+            }
+        }
+            
+        Item[] available_items = new Item[possible_items];
+            
+        int count = 0;
+        for (int j = 0; j < ItemDb.length && count < available_items.length; j++) {
+            if (ItemDb[j] != null && ItemDb[j].classification == req_classification) {
+                available_items[count++] = ItemDb[j];
+            }
+        }
+        return available_items;
     }
 }

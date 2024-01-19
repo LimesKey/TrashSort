@@ -38,10 +38,12 @@ public class TrashSort {
     public static class Player {
         public String name;
         public int score;
+        public boolean eliminated;
 
-        public Player(String name, int score) {
+        public Player(String name, int score, boolean eliminated) {
             this.name = name;
             this.score = score;
+            this.eliminated = eliminated;
         }
     }
 
@@ -49,7 +51,6 @@ public class TrashSort {
         Scanner scanner = new Scanner(System.in);
 
         Item[] itemDatabase = ItemDb.ItemDBCreator(); // fetches the Item database from another file's function
-        int bonusPoints = 0;
         int intro_decision = 0;
         int sanitizedDifficulty;
         int player_amount;
@@ -87,8 +88,8 @@ public class TrashSort {
                         "correct corresponding trash bins. The more they get correct,\n " +
                         "the harder it gets. Score 9 correct points and you win!!");
                         System.out.print(ANSI_GREEN + "\t\t\t\t\tGOODLUCK!\n" + ANSI_RESET);
-                        System.out.println(CYAN + "\n ** NOTE. 1 = Garbage, 2 = Recycling, " +
-                        "3 = Compost **" + ANSI_RESET);
+                        System.out.println(CYAN + "\n ** NOTE. 1 = Recycle, 2 = Compost, " +
+                        "3 = Landfill or maybe 4 = Special **" + ANSI_RESET);
                         break;
                     }
                 case 3: System.out.println("Ending program..."); // if they want to end it
@@ -107,7 +108,7 @@ public class TrashSort {
 
             for (int i = 0; i < player_amount; i++) {
                 System.out.println("Please enter the name for player " + (i + 1) + ": ");
-                player_list[i] = new Player((scanner.nextLine().strip()), 0);
+                player_list[i] = new Player((scanner.nextLine().strip()), 0, false);
             }
 
             while (true) {
@@ -128,7 +129,7 @@ public class TrashSort {
 
             long start = System.nanoTime();
             if (sanitizedDifficulty == 4) {
-                Player[] new_player_list = adaptive(itemDatabase, player_list, bonusPoints);
+                Player[] new_player_list = adaptive(itemDatabase, player_list);
                 for (int i = 0; i < new_player_list.length; i++) {
                     System.out.println("Player " + player_list[i].name + " has a score of " + player_list[i].score);
                 }
@@ -146,13 +147,13 @@ public class TrashSort {
         scanner.close();
     }
 
-    public static Player[] adaptive(Item[] itemDatabase, Player[] player_list, int bonusPoints) {
+    public static Player[] adaptive(Item[] itemDatabase, Player[] player_list) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Starting Adaptive difficulty round, it will get increasingly hard until you get 3 wrong answers or exhaust the database.");
+        System.out.println("Starting Adaptive difficulty round, it will get increasingly harder until you get 3 wrong answers or exhaust the database.");
         int player_count = player_list.length;
-        int track_difficulty = 0;
+        int track_difficulty = 1;
 
-        for (int difficulty = 0; difficulty < 4; difficulty++) {
+        for (int difficulty = 1; difficulty < 4; difficulty++) {
             track_difficulty++;
 
             if (difficulty > track_difficulty) {
@@ -162,28 +163,19 @@ public class TrashSort {
                 System.out.println("Current Difficulty: " + difficulty);
             }
 
-            int possible_items = 0;
-            for (int j = 0; j < itemDatabase.length; j++) {
-                if (itemDatabase[j] != null && itemDatabase[j].difficulty == difficulty) {
-                    possible_items++;
-                }
-            }
-            
-            Item[] available_items = new Item[possible_items];
-            
-            int count = 0;
-            for (int j = 0; j < itemDatabase.length && count < available_items.length; j++) {
-                if (itemDatabase[j] != null && itemDatabase[j].difficulty == difficulty) {
-                    available_items[count++] = itemDatabase[j];
-                }
-            }
+            Item[] available_items = ItemDb.searchItemDbDifficulty(difficulty, itemDatabase);
         
             int avail_split = (int) Math.floorDiv(available_items.length, player_count);
             System.out.println("Each player will get " + avail_split + " items.");
             int logical_round = 0;
             for (int player = 0; player < (player_count); player++) {
+                if (player_list[player].eliminated) {
+                    continue;
+                }
                 System.out.println(ANSI_RED + "\n\n" + player_list[player].name + " (" + (player + 1) + " of " + player_count + "), " + "it is your turn." + ANSI_RESET);
+
                 int visualized_round = 0;
+                int wrong_answers = 0;
                 for (; logical_round < (avail_split * (player + 1)); logical_round++)  {
                     visualized_round++;
                     System.out.println(ANSI_PURPLE + "Round " + visualized_round + " of " + avail_split + " for " + player_list[player].name +"!" + ANSI_RESET);
@@ -198,24 +190,78 @@ public class TrashSort {
                     .strip() // strip leading whitespace
                     .replaceAll("[^\\p{ASCII}]", ""); // use regex to replace non-ascii characters
 
-                    String correctAnswer = available_items[logical_round].classification.toString().toLowerCase();
+                    TrashClassification sanUserAnswer = matchTrashClassification(userAnswer);
 
-                    if (userAnswer.equals(correctAnswer)) {
+                    TrashClassification correctAnswer = available_items[logical_round].classification;
+
+                    if (sanUserAnswer == correctAnswer) {
                         System.out.println("Correct!");
                         if (available_items[logical_round].points.isPresent()) {
                             player_list[player].score += available_items[logical_round].points.getAsInt();
                         }
-                        player_list[player].score += 1;
+                        player_list[player].score += (1 * difficulty);
                     }
 
                     else {
                         System.out.println("Incorrect!");
+                        if (wrong_answers == 3) {
+                            System.out.println("You got 3 wrong answers, game over!");
+                            player_list[player].eliminated = true;
+                            break;
+                        }
+                        else {
+                            wrong_answers++;
+                        }
                     }
                 }
             }
         }
         scanner.close();
         return player_list;
+    }
+
+    public static TrashClassification matchTrashClassification(String classification) {
+        if (classification.isEmpty()) {
+            throw new InputMismatchException();
+        }
+        if (classification.matches("\\A\\p{ASCII}*\\z")) {
+            switch (classification) {
+                case "recycle":
+                    return TrashClassification.RECYCLE;
+                case "compost":
+                    return TrashClassification.COMPOST;
+                case "landfill":
+                    return TrashClassification.LANDFILL;
+                case "special":
+                    return TrashClassification.SPECIAL;
+                default:
+                    throw new InputMismatchException();
+            }
+        }
+
+        else if (classification.matches("\\d")) {
+            int numericClassification = Integer.parseInt(classification);
+            if (numericClassification > 0 && numericClassification < 5) {
+                switch (numericClassification) {
+                    case 1:
+                        return TrashClassification.RECYCLE;
+                    case 2:
+                        return TrashClassification.COMPOST;
+                    case 3:
+                        return TrashClassification.LANDFILL;
+                    case 4:
+                        return TrashClassification.SPECIAL;
+                    default:
+                        throw new InputMismatchException();
+                }
+            }
+            else {
+                throw new InputMismatchException();
+            }
+        }
+        else {
+            throw new InputMismatchException();
+        }
     }
 
     public static int matchDifficultyText(String difficulty) throws InputMismatchException {
@@ -247,4 +293,83 @@ public class TrashSort {
     public static long calculatePoints(long time, int difficulty, int bonusPoints) {
         return Math.round((bonusPoints / time) * difficulty) * 10;
     }
+
+public static Player classic(Player player, Item[] itemDatabase) {
+    // DECLARE VARIABLES + OBJECTS (for easyMethod2 function)
+    Scanner scanS = new Scanner(System.in);
+    int Count = 0;
+    TrashClassification userAnswer;
+    TrashClassification systemAnswer;
+
+    do {
+      int selectionEasy = (int)(1 + Math.random() * 3);
+      switch (selectionEasy) {
+        // Create case for garbageEASY
+        case 1: {
+            Item[] itemDatabaseEasy = ItemDb.searchItemDbClassification(TrashClassification.LANDFILL, itemDatabase);
+            int itemEasyLANDFILL = (int)(Math.random() * (itemDatabaseEasy.length));
+            System.out.println("Where does " +
+            itemDatabaseEasy[itemEasyLANDFILL] +" go?");
+            userAnswer = matchTrashClassification(scanS.nextLine());
+            systemAnswer = itemDatabaseEasy[itemEasyLANDFILL].classification;
+
+            if (userAnswer == systemAnswer) {
+                System.out.println(ANSI_GREEN + "Correct! " +
+                "You get a point!\n" + ANSI_RESET);
+                Count++;
+            } 
+
+            else {
+                System.out.println(ANSI_RED + "Incorrect, " +
+                "Try again\n" + ANSI_RESET);
+            }
+            break;
+        }
+
+        case 2: {
+            Item[] itemDatabaseEasy = ItemDb.searchItemDbClassification(TrashClassification.RECYCLE, itemDatabase);
+            int itemEasyRECYCLING = (int)(Math.random() * (itemDatabaseEasy.length));
+            System.out.println("Where does " +
+            itemDatabaseEasy[itemEasyRECYCLING] +" go?");
+            userAnswer = matchTrashClassification(scanS.nextLine());
+            systemAnswer = itemDatabaseEasy[itemEasyRECYCLING].classification;
+
+            if (userAnswer == systemAnswer) {
+                System.out.println(ANSI_GREEN + "Correct! " +
+                "You get a point!\n" + ANSI_RESET);
+                Count++;
+            } 
+
+            else {
+                System.out.println(ANSI_RED + "Incorrect, " +
+                "Try again\n" + ANSI_RESET);
+            }
+            break;
+        }
+        case 3: {
+            Item[] itemDatabaseEasy = ItemDb.searchItemDbClassification(TrashClassification.COMPOST, itemDatabase);
+            int itemEasyCOMPOST = (int)(Math.random() * (itemDatabaseEasy.length));
+            System.out.println("Where does " +
+            itemDatabaseEasy[itemEasyCOMPOST] +" go?");
+            userAnswer = matchTrashClassification(scanS.nextLine());
+            systemAnswer = itemDatabaseEasy[itemEasyCOMPOST].classification;
+
+            if (userAnswer == systemAnswer) {
+                System.out.println(ANSI_GREEN + "Correct! " +
+                "You get a point!\n" + ANSI_RESET);
+                Count++;
+            } 
+
+            else {
+                System.out.println(ANSI_RED + "Incorrect, " +
+                "Try again\n" + ANSI_RESET);
+            }
+            break;
+        }
+      } // End of SWITCH statement
+    } while (Count <= 2);
+    player.score = Count;
+    scanS.close();
+    return player;
+  } // End of easyMethod2 statement
 }
